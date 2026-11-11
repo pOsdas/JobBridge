@@ -1,0 +1,115 @@
+x-logs: &logs
+  driver: local
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  proxy:
+    image: caddy:2.11.8-alpine
+    read_only: true
+    cap_drop: [ALL]
+    cap_add: [NET_BIND_SERVICE]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 256m
+    pids_limit: 128
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,noexec,size=64m
+    restart: unless-stopped
+    logging: *logs
+    environment:
+      BRIDGE_HOST: ${BRIDGE_HOST:?Run python3 init.py}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks: [portal, browser]
+  app:
+    build: .
+    restart: unless-stopped
+    logging: *logs
+    init: true
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    environment:
+      BRIDGE_HOST: ${BRIDGE_HOST:?Run python3 init.py}
+      BRIDGE_KEY_FILE: /run/secrets/bridge_key
+      BRIDGE_DAILY_LIMIT: ${BRIDGE_DAILY_LIMIT:-8}
+      BRIDGE_DATA: /data
+    secrets: [bridge_key]
+    mem_limit: 512m
+    pids_limit: 128
+    cpus: 1.0
+    volumes:
+      - app_data:/data
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,noexec,size=64m
+    networks: [portal, browser]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=2)"]
+      interval: 30s
+      timeout: 4s
+      retries: 3
+  hh:
+    build: ./browser
+    stop_grace_period: 30s
+    restart: unless-stopped
+    logging: *logs
+    init: true
+    read_only: true
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+      - seccomp=./browser/seccomp.json
+    shm_size: 512m
+    mem_limit: 2g
+    pids_limit: 384
+    volumes:
+      - hh_profile:/profile
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,noexec,size=512m,mode=1777
+    networks: [browser]
+  hh-auth:
+    build: ./auth
+    restart: unless-stopped
+    logging: *logs
+    init: true
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    environment:
+      HH_KEY_FILE: /run/secrets/hh_key
+    secrets: [hh_key]
+    mem_limit: 512m
+    pids_limit: 128
+    cpus: 1.0
+    network_mode: "service:hh"
+    depends_on:
+      hh:
+        condition: service_started
+        restart: true
+    volumes:
+      - hh_auth:/auth
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,noexec,size=64m
+
+networks:
+  portal:
+  browser:
+
+volumes:
+  app_data:
+  hh_profile:
+  hh_auth:
+  caddy_data:
+  caddy_config:
+
+secrets:
+  bridge_key:
+    file: ./secrets/bridge.key
+  hh_key:
+    file: ./secrets/hh.key

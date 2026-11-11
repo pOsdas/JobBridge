@@ -1,0 +1,7 @@
+*
+!requirements.txt
+!requirements.lock
+!bridge/
+!bridge/*.py
+!bridge/static/
+!bridge/static/*

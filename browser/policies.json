@@ -1,0 +1,10 @@
+{
+  "URLBlocklist": ["*"],
+  "URLAllowlist": ["https://hh.ru"],
+  "BrowserSignin": 0,
+  "SyncDisabled": true,
+  "PasswordManagerEnabled": false,
+  "AutofillAddressEnabled": false,
+  "AutofillCreditCardEnabled": false,
+  "ExtensionInstallBlocklist": ["*"]
+}

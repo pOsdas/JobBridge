@@ -1,0 +1,44 @@
+{$BRIDGE_HOST} {
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options nosniff
+		X-Frame-Options DENY
+		Referrer-Policy same-origin
+		-Server
+	}
+
+	@internal path /internal /internal/*
+	handle @internal {
+		respond 404
+	}
+
+	handle /hh-screen/websockify {
+		reverse_proxy app:8000 {
+			header_up X-Bridge-Client-IP {http.request.remote.host}
+		}
+	}
+
+	handle_path /hh-screen/* {
+		@upgrade header Upgrade *
+		@notAsset not method GET HEAD
+		respond @upgrade 400
+		respond @notAsset 405
+		header Cache-Control "no-store"
+		forward_auth app:8000 {
+			uri /internal/hh-access
+		}
+		reverse_proxy hh:6080 {
+			header_up -Cookie
+			header_up -Authorization
+		}
+	}
+
+	handle {
+		request_body {
+			max_size 64KB
+		}
+		reverse_proxy app:8000 {
+			header_up X-Bridge-Client-IP {http.request.remote.host}
+		}
+	}
+}

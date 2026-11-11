@@ -1,0 +1,8 @@
+# Runtime versions reviewed 2026-11-10; version pins, not wheel hashes.
+cffi==2.1.1
+cryptography==50.0.0
+greenlet==3.5.5
+playwright==1.62.0
+pycparser==3.0
+pyee==13.0.1
+typing-extensions==4.16.0

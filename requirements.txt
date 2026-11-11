@@ -1,0 +1,6 @@
+cryptography==50.0.0
+starlette==1.6.0
+Telethon==1.45.0
+uvicorn==0.52.1
+websockets==16.0
+qrcode==8.2

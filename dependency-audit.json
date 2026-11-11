@@ -1,0 +1,97 @@
+{
+  "scope": "Installed runtime dependency closure only; not Docker OS packages",
+  "dependencies": [
+    {
+      "name": "anyio",
+      "version": "4.14.2",
+      "vulns": []
+    },
+    {
+      "name": "cffi",
+      "version": "2.1.1",
+      "vulns": []
+    },
+    {
+      "name": "click",
+      "version": "8.4.2",
+      "vulns": []
+    },
+    {
+      "name": "cryptography",
+      "version": "50.0.0",
+      "vulns": []
+    },
+    {
+      "name": "greenlet",
+      "version": "3.5.5",
+      "vulns": []
+    },
+    {
+      "name": "h11",
+      "version": "0.16.0",
+      "vulns": []
+    },
+    {
+      "name": "idna",
+      "version": "3.18",
+      "vulns": []
+    },
+    {
+      "name": "playwright",
+      "version": "1.62.0",
+      "vulns": []
+    },
+    {
+      "name": "pyaes",
+      "version": "1.6.1",
+      "vulns": []
+    },
+    {
+      "name": "pyasn1",
+      "version": "0.6.5",
+      "vulns": []
+    },
+    {
+      "name": "pycparser",
+      "version": "3.0",
+      "vulns": []
+    },
+    {
+      "name": "pyee",
+      "version": "13.0.1",
+      "vulns": []
+    },
+    {
+      "name": "rsa",
+      "version": "4.9.1",
+      "vulns": []
+    },
+    {
+      "name": "starlette",
+      "version": "1.6.0",
+      "vulns": []
+    },
+    {
+      "name": "telethon",
+      "version": "1.45.0",
+      "vulns": []
+    },
+    {
+      "name": "typing-extensions",
+      "version": "4.16.0",
+      "vulns": []
+    },
+    {
+      "name": "uvicorn",
+      "version": "0.52.1",
+      "vulns": []
+    },
+    {
+      "name": "websockets",
+      "version": "16.0",
+      "vulns": []
+    }
+  ],
+  "audit_date": "2026-11-10",
+  "service_runtime_only": true
+}
